@@ -18,6 +18,9 @@ const checkDuplication = async (req, res, next) => {
 router.post('/', checkDuplication, async (req, res) => {
     const { name, email, password } = req.body;
 
+    if (!name || !email || !password)
+        return res.sendStatus(401);
+
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -28,7 +31,10 @@ router.post('/', checkDuplication, async (req, res) => {
         });
         await newUser.save();
 
-        
+        return res.sendStatus(201);
+
+    } catch (err) {
+        console.error(err);
     }
 });
 
